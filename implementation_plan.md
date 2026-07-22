@@ -14,10 +14,10 @@
 - [x] **Phase 2: Telegram Bot Core**
   - [x] Step 4 — Bot Foundation & Middleware
   - [x] Step 5 — Session Management
-- [ ] **Phase 3: Processing Pipeline**
+- [x] **Phase 3: Processing Pipeline**
   - [x] Step 6 — Media Processing (FFmpeg)
   - [x] Step 7 — Transcription & Speaker Diarization
-  - [ ] Step 8 — LLM Integration & NoteSchema
+  - [x] Step 8 — LLM Integration & NoteSchema
 - [ ] **Phase 4: Enrichment & Output**
   - [ ] Step 9 — Enrichment Pipeline (GPS, Weather, Stats)
   - [ ] Step 10 — Jinja2 Markdown Rendering & Vault Storage
@@ -661,18 +661,18 @@ Implement `llm.py` — the LiteLLM integration with Pydantic structured output, 
 
 #### Completion Checklist
 
-- [ ] `NoteSchema` validates a complete response with all Tier 1, Tier 2, and health fields
-- [ ] `NoteSchema` accepts empty Tier 2 fields (default_factory=list)
-- [ ] System prompt includes language policy from architecture Section 5.1
-- [ ] System prompt includes existing tags from `tags.json`
-- [ ] System prompt includes session captions as context
-- [ ] Speaker map (if provided) is included in the prompt for name resolution
-- [ ] `litellm.acompletion()` is called with correct model, timeout, and fallbacks
-- [ ] Fallback to Gemini works when Ollama is unavailable (test with Ollama stopped)
-- [ ] `llm_fallback_used` flag is set correctly in payload
-- [ ] Pydantic validation failure triggers one retry with error feedback
-- [ ] `uv run pytest tests/test_llm.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/processors/` — zero errors
+- [x] `NoteSchema` validates a complete response with all Tier 1, Tier 2, and health fields
+- [x] `NoteSchema` accepts empty Tier 2 fields (default_factory=list)
+- [x] System prompt includes language policy from architecture Section 5.1
+- [x] System prompt includes existing tags from `tags.json`
+- [x] System prompt includes session captions as context
+- [x] Speaker map (if provided) is included in the prompt for name resolution
+- [x] `litellm.acompletion()` is called with correct model, timeout, and fallbacks
+- [x] Fallback to Gemini works when Ollama is unavailable (test with Ollama stopped)
+- [x] `llm_fallback_used` flag is set correctly in payload
+- [x] Pydantic validation failure triggers one retry with error feedback
+- [x] `uv run pytest tests/test_llm.py` — all tests pass
+- [x] `ruff check src/vlog_journal/processors/` — zero errors
 
 ---
 
