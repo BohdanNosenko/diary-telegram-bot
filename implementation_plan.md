@@ -340,14 +340,14 @@ Implement the Telegram bot using `pyTelegramBotAPI` (telebot) with async support
 
 #### Completion Checklist
 
-- [ ] Bot connects to local Telegram API server (`http://localhost:8081`)
-- [ ] `/start` returns a welcome message
-- [ ] `/help` returns a list of all commands
-- [ ] Whitelisted user receives responses; non-whitelisted user is silently dropped
-- [ ] Unauthorized access attempts are logged via `structlog`
-- [ ] Bot handles `KeyboardInterrupt` — shuts down gracefully
-- [ ] Bot auto-reconnects on transient network errors
-- [ ] `ruff check src/vlog_journal/bot/` — zero errors
+- [x] Bot connects to local Telegram API server (`http://localhost:8081`)
+- [x] `/start` returns a welcome message
+- [x] `/help` returns a list of all commands
+- [x] Whitelisted user receives responses; non-whitelisted user is silently dropped
+- [x] Unauthorized access attempts are logged via `structlog`
+- [x] Bot handles `KeyboardInterrupt` — shuts down gracefully
+- [x] Bot auto-reconnects on transient network errors
+- [x] `ruff check src/vlog_journal/bot/` — zero errors
 
 ---
 

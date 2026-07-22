@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from pydantic import ValidationError
-from vlog_journal.config import load_config, AppSettings
+from vlog_journal.config import load_config
 
 def test_load_config_valid(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     # Set required env vars

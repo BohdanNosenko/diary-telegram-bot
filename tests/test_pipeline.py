@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from vlog_journal.pipeline.registry import PipelineContext, register_step, get_step
+from vlog_journal.pipeline.registry import PipelineContext, register_step
 from vlog_journal.pipeline.runner import run_pipeline, run_pipeline_from
 
 @pytest.fixture
