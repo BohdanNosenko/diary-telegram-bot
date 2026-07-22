@@ -205,13 +205,13 @@ Implement `config.py` — a Pydantic Settings model that loads configuration fro
 #### Completion Checklist
 
 - [x] `config.py` defines Pydantic models for all TOML sections from architecture Section 14.3
-- [ ] `load_config("config.toml")` returns a fully populated `AppSettings` object
-- [ ] Missing optional fields use sensible defaults (not crash)
-- [ ] Invalid `target_resolution` (e.g., `"999p"`) raises a `ValidationError`
+- [x] `load_config("config.toml")` returns a fully populated `AppSettings` object
+- [x] Missing optional fields use sensible defaults (not crash)
+- [x] Invalid `target_resolution` (e.g., `"999p"`) raises a `ValidationError`
 - [x] `.env` secrets (TELEGRAM_BOT_TOKEN, HF_TOKEN, etc.) load into settings
-- [ ] `uv run vlog-journal --config config.toml` prints loaded config summary
-- [ ] `uv run pytest tests/test_config.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/config.py` — zero errors
+- [x] `uv run vlog-journal --config config.toml` prints loaded config summary
+- [x] `uv run pytest tests/test_config.py` — all tests pass
+- [x] `ruff check src/vlog_journal/config.py` — zero errors
 
 ---
 
@@ -279,8 +279,8 @@ Implement the pipeline execution engine: the `@register_step` decorator, `Pipeli
 - [x] `run_pipeline` executes steps sequentially, updates `pipeline_progress`, and passes `PipelineContext`
 - [x] Failing steps populate `error` and `failed_step` in `PipelineContext.state` and raise
 - [x] `setup_logging` configures `structlog` to output JSON/console correctly
-- [ ] `uv run pytest tests/test_pipeline.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/pipeline/ src/vlog_journal/logging.py` — zero errors
+- [x] `uv run pytest tests/test_pipeline.py` — all tests pass
+- [x] `ruff check src/vlog_journal/pipeline/ src/vlog_journal/logging.py` — zero errors
 
 ---
 
