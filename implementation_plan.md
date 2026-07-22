@@ -16,7 +16,7 @@
   - [x] Step 5 — Session Management
 - [ ] **Phase 3: Processing Pipeline**
   - [x] Step 6 — Media Processing (FFmpeg)
-  - [ ] Step 7 — Transcription & Speaker Diarization
+  - [x] Step 7 — Transcription & Speaker Diarization
   - [ ] Step 8 — LLM Integration & NoteSchema
 - [ ] **Phase 4: Enrichment & Output**
   - [ ] Step 9 — Enrichment Pipeline (GPS, Weather, Stats)
@@ -583,19 +583,19 @@ Implement `transcriber.py` (Faster-Whisper) and `diarizer.py` (pyannote) with pr
 
 #### Completion Checklist
 
-- [ ] Whisper loads the configured model (`large-v3` by default) on CUDA
-- [ ] Transcription produces timestamped segments from a WAV file
-- [ ] Language detection returns `"ru"`, `"uk"`, `"en"`, etc.
-- [ ] Per-segment confidence scores are captured; average stored in context
-- [ ] pyannote diarization assigns speaker labels (`Speaker 1`, `Speaker 2`, etc.)
-- [ ] Merge step correctly assigns speakers to transcript segments by timestamp overlap
-- [ ] Whisper model is unloaded after transcription: `torch.cuda.memory_allocated()` drops to near-zero
-- [ ] pyannote model is unloaded after diarization: `torch.cuda.memory_allocated()` drops to near-zero
-- [ ] Merge step uses no GPU — pure Python operation
-- [ ] Diarization disabled config → all segments labeled "Speaker 1"
-- [ ] `ctx.payload["labeled_segments"]` contains `[{"speaker", "timestamp", "text"}, ...]`
-- [ ] `uv run pytest tests/test_transcriber.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/processors/` — zero errors
+- [x] Whisper loads the configured model (`large-v3` by default) on CUDA
+- [x] Transcription produces timestamped segments from a WAV file
+- [x] Language detection returns `"ru"`, `"uk"`, `"en"`, etc.
+- [x] Per-segment confidence scores are captured; average stored in context
+- [x] pyannote diarization assigns speaker labels (`Speaker 1`, `Speaker 2`, etc.)
+- [x] Merge step correctly assigns speakers to transcript segments by timestamp overlap
+- [x] Whisper model is unloaded after transcription: `torch.cuda.memory_allocated()` drops to near-zero
+- [x] pyannote model is unloaded after diarization: `torch.cuda.memory_allocated()` drops to near-zero
+- [x] Merge step uses no GPU — pure Python operation
+- [x] Diarization disabled config → all segments labeled "Speaker 1"
+- [x] `ctx.payload["labeled_segments"]` contains `[{"speaker", "timestamp", "text"}, ...]`
+- [x] `uv run pytest tests/test_transcriber.py` — all tests pass
+- [x] `ruff check src/vlog_journal/processors/` — zero errors
 
 ---
 
