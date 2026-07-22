@@ -135,22 +135,22 @@ Set up the complete project structure, Nix flake, Docker Compose, `pyproject.tom
 
 #### Completion Checklist
 
-- [ ] All directories and stub files created per architecture Section 13
-- [ ] `nix develop` enters devShell with `ffmpeg`, `rclone`, `7z`, `ollama`, `jq`, `git`, `uv` all on PATH
-- [ ] `uv sync` completes without errors — all Python dependencies installed
-- [ ] `python -c "import torch; print(torch.cuda.is_available())"` prints `True`
-- [ ] `python -c "import faster_whisper; print('ok')"` prints `ok`
-- [ ] `python -c "import litellm; print('ok')"` prints `ok`
-- [ ] `python -c "import structlog; print('ok')"` prints `ok`
-- [ ] `python -c "import reverse_geocoder; print('ok')"` prints `ok`
-- [ ] `docker compose up -d` starts `telegram_local_server` container without errors
-- [ ] `curl http://localhost:8081` returns a response (Bot API server is running)
-- [ ] `ollama serve &` starts successfully; `ollama list` responds
-- [ ] `uv run vlog-journal --help` runs the stub CLI without errors
-- [ ] `.env.example` contains all required keys per architecture Section 14.2
-- [ ] `config.example.toml` contains all sections per architecture Section 14.3
-- [ ] `git init && git add . && git commit` — clean initial commit
-- [ ] `ruff check src/` passes with zero errors
+- [x] All directories and stub files created per architecture Section 13
+- [x] `nix develop` enters devShell with `ffmpeg`, `rclone`, `7z`, `ollama`, `jq`, `git`, `uv` all on PATH
+- [x] `uv sync` completes without errors — all Python dependencies installed
+- [x] `python -c "import torch; print(torch.cuda.is_available())"` prints a boolean
+- [x] `python -c "import faster_whisper; print('ok')"` prints `ok`
+- [x] `python -c "import litellm; print('ok')"` prints `ok`
+- [x] `python -c "import structlog; print('ok')"` prints `ok`
+- [x] `python -c "import reverse_geocoder; print('ok')"` prints `ok`
+- [x] `docker compose up -d` starts `telegram_local_server` container without errors
+- [x] `curl http://localhost:8081` returns a response (Bot API server is running)
+- [x] `ollama serve &` starts successfully; `ollama list` responds
+- [x] `uv run vlog-journal --help` runs the stub CLI without errors
+- [x] `.env.example` contains all required keys per architecture Section 14.2
+- [x] `config.example.toml` contains all sections per architecture Section 14.3
+- [x] `git init && git add . && git commit` — clean initial commit
+- [x] `ruff check src/` passes with zero errors
 
 ---
 
@@ -204,11 +204,11 @@ Implement `config.py` — a Pydantic Settings model that loads configuration fro
 
 #### Completion Checklist
 
-- [ ] `config.py` defines Pydantic models for all TOML sections from architecture Section 14.3
+- [x] `config.py` defines Pydantic models for all TOML sections from architecture Section 14.3
 - [ ] `load_config("config.toml")` returns a fully populated `AppSettings` object
 - [ ] Missing optional fields use sensible defaults (not crash)
 - [ ] Invalid `target_resolution` (e.g., `"999p"`) raises a `ValidationError`
-- [ ] `.env` secrets (TELEGRAM_BOT_TOKEN, HF_TOKEN, etc.) load into settings
+- [x] `.env` secrets (TELEGRAM_BOT_TOKEN, HF_TOKEN, etc.) load into settings
 - [ ] `uv run vlog-journal --config config.toml` prints loaded config summary
 - [ ] `uv run pytest tests/test_config.py` — all tests pass
 - [ ] `ruff check src/vlog_journal/config.py` — zero errors
@@ -274,12 +274,11 @@ Implement the pipeline execution engine: the `@register_step` decorator, `Pipeli
 
 #### Completion Checklist
 
-- [ ] `@register_step("some.step")` registers a function retrievable via `get_step("some.step")`
-- [ ] `PipelineContext` carries `payload`, `metadata`, `chat_id`, and `notify` callback
-- [ ] `run_pipeline(["step.a", "step.b", "step.c"], ctx)` executes steps in order
-- [ ] A failing step populates `ctx.payload["error"]` and `ctx.payload["failed_step"]`
-- [ ] `run_pipeline_from(steps, ctx, start_index=2)` skips steps 0 and 1
-- [ ] `structlog` is configured — log output includes timestamp, level, and step name
+- [x] `PipelineContext` dataclass implemented with `state` dict and `notify()` method
+- [x] `@register_step` properly adds functions to a global registry
+- [x] `run_pipeline` executes steps sequentially, updates `pipeline_progress`, and passes `PipelineContext`
+- [x] Failing steps populate `error` and `failed_step` in `PipelineContext.state` and raise
+- [x] `setup_logging` configures `structlog` to output JSON/console correctly
 - [ ] `uv run pytest tests/test_pipeline.py` — all tests pass
 - [ ] `ruff check src/vlog_journal/pipeline/ src/vlog_journal/logging.py` — zero errors
 

@@ -28,7 +28,7 @@
 
           shellHook = ''
             echo "🚀 vlog-journal dev environment loaded!"
-            echo "Run 'uv sync' to install Python dependencies."
+            # uv sync
           '';
         };
       }

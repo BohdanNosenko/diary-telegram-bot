@@ -1,5 +1,4 @@
 import argparse
-from pathlib import Path
 from vlog_journal.config import load_config
 import sys
 
