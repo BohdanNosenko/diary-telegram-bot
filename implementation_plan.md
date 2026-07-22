@@ -15,7 +15,7 @@
   - [x] Step 4 — Bot Foundation & Middleware
   - [x] Step 5 — Session Management
 - [ ] **Phase 3: Processing Pipeline**
-  - [ ] Step 6 — Media Processing (FFmpeg)
+  - [x] Step 6 — Media Processing (FFmpeg)
   - [ ] Step 7 — Transcription & Speaker Diarization
   - [ ] Step 8 — LLM Integration & NoteSchema
 - [ ] **Phase 4: Enrichment & Output**
@@ -495,18 +495,18 @@ Implement `media.py` — video/audio stitching, normalization, audio extraction,
 
 #### Completion Checklist
 
-- [ ] `media.prepare_and_stitch` correctly resolves entry date from `min(creation_times)`
-- [ ] All datetime comparisons use timezone-aware objects (no `TypeError`)
-- [ ] Single video clip with `"original"` resolution passes through without re-encoding
-- [ ] Multiple video clips are stitched with correct scaling, padding, and FPS normalization
-- [ ] Multiple voice memos are concatenated via `filter_complex` concat (not just first file)
-- [ ] `media.extract_audio` produces a 16 kHz mono WAV file from video
-- [ ] `media.extract_audio` is a no-op for voice-only sessions
-- [ ] `media.cleanup_temp_files` removes all intermediate files
-- [ ] `RESOLUTION_MAP` includes all 7 options: original, 4k, 1080p, 720p, 480p, 360p, 240p
-- [ ] FFmpeg errors raise `RuntimeError` with stderr content
-- [ ] `uv run pytest tests/test_media.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/processors/media.py` — zero errors
+- [x] `media.prepare_and_stitch` correctly resolves entry date from `min(creation_times)`
+- [x] All datetime comparisons use timezone-aware objects (no `TypeError`)
+- [x] Single video clip with `"original"` resolution passes through without re-encoding
+- [x] Multiple video clips are stitched with correct scaling, padding, and FPS normalization
+- [x] Multiple voice memos are concatenated via `filter_complex` concat (not just first file)
+- [x] `media.extract_audio` produces a 16 kHz mono WAV file from video
+- [x] `media.extract_audio` is a no-op for voice-only sessions
+- [x] `media.cleanup_temp_files` removes all intermediate files
+- [x] `RESOLUTION_MAP` includes all 7 options: original, 4k, 1080p, 720p, 480p, 360p, 240p
+- [x] FFmpeg errors raise `RuntimeError` with stderr content
+- [x] `uv run pytest tests/test_media.py` — all tests pass
+- [x] `ruff check src/vlog_journal/processors/media.py` — zero errors
 
 ---
 
