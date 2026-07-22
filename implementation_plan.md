@@ -7,13 +7,13 @@
 
 ## Master Progress Checklist
 
-- [ ] **Phase 1: Foundation**
-  - [ ] Step 1 — Environment & Project Scaffolding
-  - [ ] Step 2 — Configuration System
-  - [ ] Step 3 — Pipeline Framework & Logging
-- [ ] **Phase 2: Telegram Bot Core**
-  - [ ] Step 4 — Bot Foundation & Middleware
-  - [ ] Step 5 — Session Management
+- [x] **Phase 1: Foundation**
+  - [x] Step 1 — Environment & Project Scaffolding
+  - [x] Step 2 — Configuration System
+  - [x] Step 3 — Pipeline Framework & Logging
+- [x] **Phase 2: Telegram Bot Core**
+  - [x] Step 4 — Bot Foundation & Middleware
+  - [x] Step 5 — Session Management
 - [ ] **Phase 3: Processing Pipeline**
   - [ ] Step 6 — Media Processing (FFmpeg)
   - [ ] Step 7 — Transcription & Speaker Diarization
@@ -413,19 +413,19 @@ Implement `SessionManager` with full pipeline state persistence (`data/sessions.
 
 #### Completion Checklist
 
-- [ ] `SessionManager` supports full lifecycle: `collecting → processing → draft_pending → approved`
-- [ ] Clips are stored as `{"path", "type", "caption"}` dicts (not parallel lists)
-- [ ] `sessions.json` is written to disk after every state mutation
-- [ ] Reloading `SessionManager` from disk recovers all active sessions
-- [ ] `/start_session` creates a new session; `/start_session 2026-07-20` overrides the date
-- [ ] Sending a video/voice message to the bot adds it to the active session
-- [ ] `/finish_session` transitions session to `processing`
-- [ ] `/cancel` removes the session and cleans up temp files
-- [ ] On startup, `draft_pending` sessions re-send review keyboards
-- [ ] On startup, stale `collecting` sessions get a reminder message
-- [ ] On startup, orphaned `processing` sessions retry from `pipeline_progress` or revert to `collecting`
-- [ ] `uv run pytest tests/test_state.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/bot/state.py` — zero errors
+- [x] `SessionManager` supports full lifecycle: `collecting → processing → draft_pending → approved`
+- [x] Clips are stored as `{"path", "type", "caption"}` dicts (not parallel lists)
+- [x] `sessions.json` is written to disk after every state mutation
+- [x] Reloading `SessionManager` from disk recovers all active sessions
+- [x] `/start_session` creates a new session; `/start_session 2026-07-20` overrides the date
+- [x] Sending a video/voice message to the bot adds it to the active session
+- [x] `/finish_session` transitions session to `processing`
+- [x] `/cancel` removes the session and cleans up temp files
+- [x] On startup, `draft_pending` sessions re-send review keyboards
+- [x] On startup, stale `collecting` sessions get a reminder message
+- [x] On startup, orphaned `processing` sessions retry from `pipeline_progress` or revert to `collecting`
+- [x] `uv run pytest tests/test_state.py` — all tests pass
+- [x] `ruff check src/vlog_journal/bot/state.py` — zero errors
 
 ---
 
