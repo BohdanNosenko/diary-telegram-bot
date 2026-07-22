@@ -1,0 +1,8 @@
+.env
+data/
+__pycache__/
+.venv/
+*.7z
+.direnv/
+.ruff_cache/
+.pytest_cache/

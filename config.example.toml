@@ -1,0 +1,74 @@
+[app]
+vault_name = "PersonalVault"
+vault_path = "/home/user/documents/PersonalVault"
+vlogs_relative_path = "Journal/Vlogs"
+media_relative_path = "Attachments/Vlogs"
+tags_cache_file = "data/tags.json"
+sessions_state_file = "data/sessions.json"
+session_timeout_hours = 12
+
+[media]
+target_resolution = "720p"
+target_fps = 30
+video_codec = "libsvtav1"
+audio_codec = "libopus"
+audio_bitrate = "128k"
+crf = 32
+
+[transcription]
+engine = "faster-whisper"
+model = "large-v3"
+language = "auto"
+device = "cuda"
+compute_type = "float16"
+
+[diarization]
+enabled = true
+min_speakers = 1
+max_speakers = 5
+
+[llm]
+provider = "ollama/qwen2.5:14b-q3_K_M"
+api_base = "http://localhost:11434"
+temperature = 0.3
+timeout = 120
+
+[llm.fallback]
+provider = "gemini/gemini-2.5-flash"
+temperature = 0.3
+
+[enrichment]
+gps_extraction = true
+reverse_geocode = true
+weather_fetch = true
+proximity_dedup_meters = 500
+
+[backup]
+enabled = true
+schedule_cron = "0 4 * * *"
+remote_name = "gdrive"
+remote_folder = "vlog-journal-backups"
+retention_daily_days = 2
+retention_weekly_weeks = 1
+
+[pipelines]
+video_diary = [
+    "media.prepare_and_stitch",
+    "media.extract_audio",
+    "transcription.whisper_transcribe",
+    "transcription.diarize_speakers",
+    "transcription.merge_segments",
+    "llm.structure_transcript",
+    "enrichment.extract_gps",
+    "enrichment.reverse_geocode",
+    "enrichment.fetch_weather",
+    "enrichment.compute_media_stats",
+    "vault.render_markdown",
+    "vault.save_entry",
+    "vault.update_tag_cache",
+    "media.cleanup_temp_files"
+]
+backup_vault = [
+    "vault.create_encrypted_archive",
+    "vault.upload_and_prune_remote"
+]
