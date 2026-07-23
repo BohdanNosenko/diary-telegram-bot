@@ -5,6 +5,7 @@ from telebot.async_telebot import AsyncTeleBot
 
 from vlog_journal.bot.handlers import register_handlers
 from vlog_journal.bot.middleware import WhitelistMiddleware
+from vlog_journal.bot.review import build_review_message
 from vlog_journal.bot.state import SessionManager
 from vlog_journal.config import AppSettings
 
@@ -30,8 +31,8 @@ def create_bot(settings: AppSettings, session_manager: SessionManager | None = N
     bot.setup_middleware(whitelist_middleware)
     logger.info("Registered WhitelistMiddleware", allowed_count=len(whitelist_middleware.allowed_user_ids))
 
-    # Register Handlers with session_manager
-    register_handlers(bot, session_manager)
+    # Register Handlers with session_manager and settings
+    register_handlers(bot, session_manager, settings=settings)
     logger.info("Registered command and media handlers")
 
     return bot, session_manager
@@ -41,15 +42,17 @@ async def run_crash_recovery(bot: AsyncTeleBot, session_manager: SessionManager,
     # 1. Check pending reviews (draft_pending)
     pending_reviews = session_manager.get_pending_reviews()
     for chat_id, session in pending_reviews:
-        logger.info("Crash recovery: Found pending draft review", chat_id=chat_id)
+        logger.info("Crash recovery: Resending pending draft review", chat_id=chat_id)
         try:
+            review_text, review_kb = build_review_message(session)
             await bot.send_message(
                 chat_id,
-                "⚠️ **Bot restarted!** You have a pending draft ready for review. Use `/status` to view.",
+                f"⚠️ **Bot restarted!** Re-sending your pending draft review:\n\n{review_text}",
+                reply_markup=review_kb,
                 parse_mode="Markdown",
             )
         except Exception as e:
-            logger.warning("Failed to send crash recovery notification", chat_id=chat_id, error=str(e))
+            logger.warning("Failed to resend crash recovery notification", chat_id=chat_id, error=str(e))
 
     # 2. Check stale collecting sessions
     stale_sessions = session_manager.get_stale_sessions(timeout_hours=timeout_hours)

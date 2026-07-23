@@ -1,0 +1,229 @@
+---
+# === Core ===
+date: {{ entry_date }}
+time: "{{ entry_time }}"
+day_of_week: {{ day_of_week }}
+type: vlog
+media_type: {{ media_stats.media_type }}
+title: "{{ title }}"
+
+# === LLM-Generated (Tier 1) ===
+mood: {{ mood }}
+energy_level: {{ energy_level }}
+category: {{ category }}
+summary: >
+  {{ summary }}
+people:
+{% for p in people -%}
+  - {{ p }}
+{% endfor -%}
+topics:
+{% for t in topics -%}
+  - {{ t }}
+{% endfor -%}
+locations_mentioned:
+{% for l in locations_mentioned -%}
+  - {{ l }}
+{% endfor -%}
+key_highlights:
+{% for h in key_highlights -%}
+  - {{ h }}
+{% endfor -%}
+
+# === LLM-Generated (Tier 2) ===
+action_items:
+{% for a in action_items -%}
+  - {{ a }}
+{% endfor -%}
+questions_raised:
+{% for q in questions_raised -%}
+  - {{ q }}
+{% endfor -%}
+gratitude:
+{% for g in gratitude -%}
+  - {{ g }}
+{% endfor -%}
+concerns:
+{% for c in concerns -%}
+  - {{ c }}
+{% endfor -%}
+notable_quotes:
+{% for nq in notable_quotes -%}
+  - {{ nq }}
+{% endfor -%}
+media_mentioned:
+{% for m in media_mentioned -%}
+  - {{ m }}
+{% endfor -%}
+food_and_drink:
+{% for f in food_and_drink -%}
+  - {{ f }}
+{% endfor -%}
+plans_future:
+{% for pf in plans_future -%}
+  - {{ pf }}
+{% endfor -%}
+references_past:
+{% for rp in references_past -%}
+  - {{ rp }}
+{% endfor -%}
+dreams:
+{% for d in dreams -%}
+  - {{ d }}
+{% endfor -%}
+creative_ideas:
+{% for ci in creative_ideas -%}
+  - {{ ci }}
+{% endfor -%}
+learning:
+{% for l in learning -%}
+  - {{ l }}
+{% endfor -%}
+financial_mentions:
+{% for fm in financial_mentions -%}
+  - {{ fm }}
+{% endfor -%}
+social_quality: {{ social_quality if social_quality is not none else "null" }}
+
+# === Health & Wellness ===
+health:
+  sleep:
+{% if health.sleep %}
+    quality: {{ health.sleep.quality if health.sleep.quality is not none else "null" }}
+    hours: {{ health.sleep.hours if health.sleep.hours is not none else "null" }}
+    notes: {{ health.sleep.notes if health.sleep.notes is not none else "null" }}
+{% else %}
+    quality: null
+    hours: null
+    notes: null
+{% endif %}
+  exercise:
+{% if health.exercise %}
+{% for ex in health.exercise -%}
+    - activity: {{ ex.activity }}
+      duration: {{ ex.duration if ex.duration is not none else "null" }}
+      intensity: {{ ex.intensity if ex.intensity is not none else "null" }}
+      notes: {{ ex.notes if ex.notes is not none else "null" }}
+{% endfor -%}
+{% else %}
+    []
+{% endif %}
+  pain_or_discomfort:
+{% if health.pain_or_discomfort %}
+{% for p in health.pain_or_discomfort -%}
+    - location: {{ p.location }}
+      severity: {{ p.severity if p.severity is not none else "null" }}
+      notes: {{ p.notes if p.notes is not none else "null" }}
+{% endfor -%}
+{% else %}
+    []
+{% endif %}
+  symptoms:
+{% for s in health.symptoms -%}
+    - {{ s }}
+{% endfor -%}
+  medications:
+{% for m in health.medications -%}
+    - {{ m }}
+{% endfor -%}
+  mental_state:
+{% if health.mental_state %}
+    stress_level: {{ health.mental_state.stress_level if health.mental_state.stress_level is not none else "null" }}
+    notes: {{ health.mental_state.notes if health.mental_state.notes is not none else "null" }}
+{% else %}
+    stress_level: null
+    notes: null
+{% endif %}
+  nutrition:
+{% for n in health.nutrition -%}
+    - {{ n }}
+{% endfor -%}
+  substances:
+{% for sub in health.substances -%}
+    - {{ sub }}
+{% endfor -%}
+  body_metrics: {}
+
+# === Location & Weather ===
+primary_location: {{ primary_location if primary_location is not none else "null" }}
+primary_weather: {{ primary_weather if primary_weather is not none else "null" }}
+locations_visited:
+{% if locations_visited %}
+{% for loc in locations_visited -%}
+  - name: {{ loc.name if loc.name is not none else "null" }}
+    gps: {{ loc.gps }}
+    weather: {{ loc.weather if loc.weather is not none else "null" }}
+    clips: {{ loc.clips }}
+    time_range: "{{ loc.time_range }}"
+{% endfor -%}
+{% else %}
+  []
+{% endif %}
+
+# === Media Stats ===
+duration: "{{ media_stats.duration }}"
+clip_count: {{ media_stats.clip_count }}
+word_count: {{ media_stats.word_count }}
+speakers: {{ media_stats.speakers }}
+speaking_pace_wpm: {{ media_stats.speaking_pace_wpm }}
+language: {{ media_stats.language }}
+languages_detected:
+{% for lang_code, perc in media_stats.languages_detected.items() -%}
+  {{ lang_code }}: {{ perc }}
+{% endfor -%}
+confidence: {{ media_stats.confidence }}
+recording_device: "{{ media_stats.recording_device }}"
+original_resolution: "{{ media_stats.original_resolution }}"
+file_size_mb: {{ media_stats.file_size_mb }}
+
+# === System ===
+whisper_model: {{ media_stats.whisper_model }}
+llm_model: "{{ media_stats.llm_model }}"
+llm_fallback_used: {{ media_stats.llm_fallback_used | lower }}
+processed_at: "{{ media_stats.processed_at }}"
+entry_version: {{ media_stats.entry_version }}
+
+# === Tags ===
+tags:
+{% for t in tags -%}
+  - {{ t }}
+{% endfor -%}
+---
+
+# Vlog — {{ entry_date }}
+
+![[{{ media_filename }}]]
+
+> {{ summary }}
+
+## Highlights
+
+{% for highlight in key_highlights -%}
+- {{ highlight }}
+{% endfor %}
+
+{% if action_items -%}
+## Action Items
+
+{% for item in action_items -%}
+- [ ] {{ item }}
+{% endfor %}
+{% endif -%}
+
+{% if notable_quotes -%}
+## Notable Quotes
+
+{% for quote in notable_quotes -%}
+> {{ quote }}
+{% endfor %}
+{% endif -%}
+
+## Transcript
+
+> [!NOTE]- Full Transcript ({{ media_stats.word_count }} words, {{ media_stats.duration }})
+>
+{% for seg in cleaned_transcript -%}
+> **{{ seg.speaker }}** *({{ seg.timestamp }})*
+> {{ seg.text }}
+>
+{% endfor %}

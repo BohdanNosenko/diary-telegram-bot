@@ -18,11 +18,11 @@
   - [x] Step 6 — Media Processing (FFmpeg)
   - [x] Step 7 — Transcription & Speaker Diarization
   - [x] Step 8 — LLM Integration & NoteSchema
-- [ ] **Phase 4: Enrichment & Output**
-  - [ ] Step 9 — Enrichment Pipeline (GPS, Weather, Stats)
-  - [ ] Step 10 — Jinja2 Markdown Rendering & Vault Storage
+- [x] **Phase 4: Enrichment & Output**
+  - [x] Step 9 — Enrichment Pipeline (GPS, Weather, Stats)
+  - [x] Step 10 — Jinja2 Markdown Rendering & Vault Storage
 - [ ] **Phase 5: Interactive Review & Backup**
-  - [ ] Step 11 — Telegram Review Loop & Speaker Labeling
+  - [x] Step 11 — Telegram Review Loop & Speaker Labeling
   - [ ] Step 12 — Encrypted Backup & Retention
 - [ ] **Phase 6: Commands & Error Handling**
   - [ ] Step 13 — Advanced Bot Commands & Error Notifications
@@ -748,17 +748,17 @@ Implement the auto-extraction modules that don't require the LLM: GPS coordinate
 
 #### Completion Checklist
 
-- [ ] GPS extraction parses `ffprobe` location tags from video files
-- [ ] GPS deduplication merges points within configured proximity radius
-- [ ] `reverse_geocoder` resolves GPS coordinates to city names (offline, no API key)
-- [ ] `primary_location` is set to the location with the most clips
-- [ ] Weather is fetched from Open-Meteo for each location
-- [ ] Weather codes are mapped to human-readable strings (e.g., `"24°C, partly cloudy"`)
-- [ ] Weather fetch failure is non-fatal — logs warning, sets `null`
-- [ ] Missing GPS data is non-fatal — logs warning, sets `null`
-- [ ] Media stats (duration, word count, WPM, speakers, device, resolution, file size) are computed
-- [ ] `uv run pytest tests/test_enrichment.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/enrichment/` — zero errors
+- [x] GPS extraction parses `ffprobe` location tags from video files
+- [x] GPS deduplication merges points within configured proximity radius
+- [x] `reverse_geocoder` resolves GPS coordinates to city names (offline, no API key)
+- [x] `primary_location` is set to the location with the most clips
+- [x] Weather is fetched from Open-Meteo for each location
+- [x] Weather codes are mapped to human-readable strings (e.g., `"24°C, partly cloudy"`)
+- [x] Weather fetch failure is non-fatal — logs warning, sets `null`
+- [x] Missing GPS data is non-fatal — logs warning, sets `null`
+- [x] Media stats (duration, word count, WPM, speakers, device, resolution, file size) are computed
+- [x] `uv run pytest tests/test_enrichment.py` — all tests pass
+- [x] `ruff check src/vlog_journal/enrichment/` — zero errors
 
 ---
 
@@ -837,20 +837,20 @@ Implement the Jinja2 template renderer, the vault storage module with same-day c
 
 #### Completion Checklist
 
-- [ ] Jinja2 template renders valid YAML frontmatter + markdown body
-- [ ] Frontmatter includes ALL fields from architecture Section 6.2
-- [ ] Tags are auto-generated from LLM fields (people, topics, location, category)
-- [ ] `#journal/vlog` tag is always present
-- [ ] Summary is in the main spoken language; highlights in English
-- [ ] Transcript is in a collapsible `> [!NOTE]-` callout
-- [ ] Action items render as `- [ ]` checkboxes
-- [ ] Same-day collision protection works: 1st → `2026-07-20.md`, 2nd → `2026-07-20-02.md`
-- [ ] Media file is moved to `Attachments/Vlogs/` with matching collision suffix
-- [ ] Wikilink in template uses the collision-aware filename
-- [ ] `TagManager` loads, saves, and deduplicates `tags.json`
-- [ ] `/sync_tags` scans all `.md` files and rebuilds tag cache
-- [ ] `uv run pytest tests/test_vault.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/vault/` — zero errors
+- [x] Jinja2 template renders valid YAML frontmatter + markdown body
+- [x] Frontmatter includes ALL fields from architecture Section 6.2
+- [x] Tags are auto-generated from LLM fields (people, topics, location, category)
+- [x] `#journal/vlog` tag is always present
+- [x] Summary is in the main spoken language; highlights in English
+- [x] Transcript is in a collapsible `> [!NOTE]-` callout
+- [x] Action items render as `- [ ]` checkboxes
+- [x] Same-day collision protection works: 1st → `2026-07-20.md`, 2nd → `2026-07-20-02.md`
+- [x] Media file is moved to `Attachments/Vlogs/` with matching collision suffix
+- [x] Wikilink in template uses the collision-aware filename
+- [x] `TagManager` loads, saves, and deduplicates `tags.json`
+- [x] `/sync_tags` scans all `.md` files and rebuilds tag cache
+- [x] `uv run pytest tests/test_vault.py` — all tests pass
+- [x] `ruff check src/vlog_journal/vault/` — zero errors
 
 ---
 
@@ -910,17 +910,17 @@ Implement the interactive Telegram review flow: display draft to user with inlin
 
 #### Completion Checklist
 
-- [ ] Draft preview displays title, summary, mood, highlights, and speaker list
-- [ ] Inline keyboard shows `[✅ Approve]` `[✏️ Edit]` `[❌ Discard]`
-- [ ] `[✅ Approve]` saves note, updates tags, cleans up, sends confirmation
-- [ ] `[❌ Discard]` removes session, deletes temp files, sends confirmation
-- [ ] `[✏️ Edit]` opens sub-menu with labeling, date, and free-text options
-- [ ] Speaker labeling parses input, updates speaker map, re-triggers LLM, re-sends review
-- [ ] Date override updates entry date, re-renders template, re-sends review
-- [ ] Messages exceeding 4096 chars are truncated gracefully
-- [ ] Session status transitions correctly through the review flow
-- [ ] Re-sent review after edits replaces the previous review message (not duplicate)
-- [ ] `ruff check src/vlog_journal/bot/` — zero errors
+- [x] Draft preview displays title, summary, mood, highlights, and speaker list
+- [x] Inline keyboard shows `[✅ Approve]` `[✏️ Edit]` `[❌ Discard]`
+- [x] `[✅ Approve]` saves note, updates tags, cleans up, sends confirmation
+- [x] `[❌ Discard]` removes session, deletes temp files, sends confirmation
+- [x] `[✏️ Edit]` opens sub-menu with labeling, date, and free-text options
+- [x] Speaker labeling parses input, updates speaker map, re-triggers LLM, re-sends review
+- [x] Date override updates entry date, re-renders template, re-sends review
+- [x] Messages exceeding 4096 chars are truncated gracefully
+- [x] Session status transitions correctly through the review flow
+- [x] Re-sent review after edits replaces the previous review message (not duplicate)
+- [x] `ruff check src/vlog_journal/bot/` — zero errors
 
 ---
 
