@@ -21,9 +21,9 @@
 - [x] **Phase 4: Enrichment & Output**
   - [x] Step 9 — Enrichment Pipeline (GPS, Weather, Stats)
   - [x] Step 10 — Jinja2 Markdown Rendering & Vault Storage
-- [ ] **Phase 5: Interactive Review & Backup**
+- [x] **Phase 5: Interactive Review & Backup**
   - [x] Step 11 — Telegram Review Loop & Speaker Labeling
-  - [ ] Step 12 — Encrypted Backup & Retention
+  - [x] Step 12 — Encrypted Backup & Retention
 - [ ] **Phase 6: Commands & Error Handling**
   - [ ] Step 13 — Advanced Bot Commands & Error Notifications
 - [ ] **Phase 7: Testing & Documentation**
@@ -985,18 +985,18 @@ Implement the encrypted backup system: 7z archive creation via `py7zr` (passphra
 
 #### Completion Checklist
 
-- [ ] 7z archive is created with AES-256 encryption via `py7zr` (pure Python, no subprocess)
-- [ ] Passphrase stays in Python memory, NOT visible in `ps aux` or `/proc/*/cmdline`
-- [ ] Archive is named `vlog_backup_YYYY-MM-DD_daily.7z` or `_weekly.7z` (Sunday)
-- [ ] `rclone copy` uploads archive to configured Google Drive remote
-- [ ] Retention: keeps last 2 dailies and 1 weekly, deletes older archives
-- [ ] All `rclone deletefile` subprocesses are properly awaited
-- [ ] Local archive is deleted after successful upload
-- [ ] APScheduler cron fires at configured time (default 4:00 AM)
-- [ ] `/backup` command triggers manual backup and reports result
-- [ ] Backup failure sends Telegram error notification
-- [ ] `uv run pytest tests/test_backup.py` — all tests pass
-- [ ] `ruff check src/vlog_journal/vault/backup.py` — zero errors
+- [x] 7z archive is created with AES-256 encryption via `py7zr` (pure Python, no subprocess)
+- [x] Passphrase stays in Python memory, NOT visible in `ps aux` or `/proc/*/cmdline`
+- [x] Archive is named `vlog_backup_YYYY-MM-DD_daily.7z` or `_weekly.7z` (Sunday)
+- [x] `rclone copy` uploads archive to configured Google Drive remote
+- [x] Retention: keeps last 2 dailies and 1 weekly, deletes older archives
+- [x] All `rclone deletefile` subprocesses are properly awaited
+- [x] Local archive is deleted after successful upload
+- [x] APScheduler cron fires at configured time (default 4:00 AM)
+- [x] `/backup` command triggers manual backup and reports result
+- [x] Backup failure sends Telegram error notification
+- [x] `uv run pytest tests/test_backup.py` — all tests pass
+- [x] `ruff check src/vlog_journal/vault/backup.py` — zero errors
 
 ---
 

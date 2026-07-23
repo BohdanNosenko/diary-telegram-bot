@@ -490,8 +490,51 @@ def register_handlers(
                 await _reprocess_draft(chat_id, updated_session)
             return
 
-    @bot.message_handler(commands=["backup", "sync_tags", "retry"])
+    @bot.message_handler(commands=["backup"])
+    async def handle_backup(message: Message) -> None:
+        chat_id = message.chat.id
+        logger.info("Command /backup received", chat_id=chat_id)
+
+        if not settings:
+            await bot.reply_to(message, "❌ System error: Settings missing.")
+            return
+
+        await bot.reply_to(message, "📦 **Starting encrypted vault backup...**", parse_mode="Markdown")
+
+        backup_steps = [
+            "vault.create_encrypted_archive",
+            "vault.upload_and_prune_remote",
+        ]
+
+        ctx = PipelineContext(chat_id=chat_id, config=settings)
+
+        async def custom_notify(msg: str) -> None:
+            try:
+                await bot.send_message(chat_id, f"⚙️ {msg}", parse_mode="Markdown")
+            except Exception:
+                pass
+
+        ctx.notify = custom_notify
+
+        try:
+            res_ctx = await run_pipeline(backup_steps, ctx)
+            archive_name = res_ctx.payload.get("archive_name", "archive.7z")
+            tag = res_ctx.payload.get("backup_tag", "daily")
+            await bot.send_message(
+                chat_id,
+                f"✅ **Backup Complete!**\n\n📦 **Archive:** `{archive_name}` ({tag})\n☁️ Uploaded to remote cloud storage and pruned old backups.",
+                parse_mode="Markdown",
+            )
+        except Exception as e:
+            logger.error("Manual backup failed", chat_id=chat_id, error=str(e))
+            await bot.send_message(
+                chat_id,
+                f"❌ **Backup Failed!**\nError: `{e}`",
+                parse_mode="Markdown",
+            )
+
+    @bot.message_handler(commands=["sync_tags", "retry"])
     async def handle_stub_commands(message: Message) -> None:
         cmd = message.text.split()[0] if message.text else "command"
         logger.info("Stub command received", command=cmd, chat_id=message.chat.id)
-        await bot.reply_to(message, f"🚧 Command `{cmd}` active.", parse_mode="Markdown")
+        await bot.reply_to(message, f"🚧 **Feature coming soon!** Command `{cmd}` active.", parse_mode="Markdown")
