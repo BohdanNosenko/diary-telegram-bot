@@ -24,8 +24,8 @@
 - [x] **Phase 5: Interactive Review & Backup**
   - [x] Step 11 — Telegram Review Loop & Speaker Labeling
   - [x] Step 12 — Encrypted Backup & Retention
-- [ ] **Phase 6: Commands & Error Handling**
-  - [ ] Step 13 — Advanced Bot Commands & Error Notifications
+- [x] **Phase 6: Commands & Error Handling**
+  - [x] Step 13 — Advanced Bot Commands & Error Notifications
 - [ ] **Phase 7: Testing & Documentation**
   - [ ] Step 14 — Integration Testing & End-to-End Validation
   - [ ] Step 15 — Documentation, README & Deployment Guide
@@ -1057,16 +1057,16 @@ Implement remaining bot commands (`/status`, `/retry`, `/sync_tags`) and the err
 
 #### Completion Checklist
 
-- [ ] `/status` reports: Ollama status, GPU VRAM usage, disk space, Rclone connectivity, active sessions
-- [ ] `/retry` resumes pipeline from the failed step
-- [ ] `/retry full` re-runs the entire pipeline
-- [ ] `/retry` with no error state responds "No failed pipeline to retry"
-- [ ] `/sync_tags` scans vault and reports tag count
-- [ ] Pipeline failures send Telegram alert with step name, error message, and `/retry` hint
-- [ ] Error details are stored in session state for retry
-- [ ] Stale session reminder fires for sessions collecting >N hours
-- [ ] All commands respond appropriately when no session is active
-- [ ] `ruff check src/vlog_journal/bot/` — zero errors
+- [x] `/status` reports: Ollama status, GPU VRAM usage, disk space, Rclone connectivity, active sessions
+- [x] `/retry` resumes pipeline from the failed step
+- [x] `/retry full` re-runs the entire pipeline
+- [x] `/retry` with no error state responds "No failed pipeline to retry"
+- [x] `/sync_tags` scans vault and reports tag count
+- [x] Pipeline failures send Telegram alert with step name, error message, and `/retry` hint
+- [x] Error details are stored in session state for retry
+- [x] Stale session reminder fires for sessions collecting >N hours
+- [x] All commands respond appropriately when no session is active
+- [x] `ruff check src/vlog_journal/bot/` — zero errors
 
 ---
 

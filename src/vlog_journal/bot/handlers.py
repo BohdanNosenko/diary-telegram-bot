@@ -232,32 +232,213 @@ def register_handlers(
     @bot.message_handler(commands=["status"])
     async def handle_status(message: Message) -> None:
         chat_id = message.chat.id
+        logger.info("Command /status received", chat_id=chat_id)
+        session = session_manager.get_session(chat_id)
+
+        # 1. Ollama Health Check
+        ollama_status = "🔴 Offline"
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=3.0) as client:
+                resp = await client.get("http://localhost:11434/api/tags")
+                if resp.status_code == 200:
+                    models = [m.get("name") for m in resp.json().get("models", [])]
+                    model_str = ", ".join(models[:2]) if models else "Online"
+                    ollama_status = f"🟢 Online (`{model_str}`)"
+        except Exception:
+            ollama_status = "🔴 Offline / Unreachable"
+
+        # 2. CUDA GPU VRAM Check
+        cuda_status = "💻 CPU Mode (CUDA unavailable)"
+        try:
+            import torch
+            if torch.cuda.is_available():
+                dev_name = torch.cuda.get_device_name(0)
+                alloc_mb = round(torch.cuda.memory_allocated(0) / (1024 * 1024), 1)
+                total_mb = round(torch.cuda.get_device_properties(0).total_memory / (1024 * 1024), 1)
+                cuda_status = f"⚡ **GPU:** `{dev_name}`\n• **VRAM:** `{alloc_mb} MB` / `{total_mb} MB`"
+        except Exception as e:
+            cuda_status = f"⚠️ VRAM query error: `{e}`"
+
+        # 3. Disk Space Check
+        disk_status = "Unknown"
+        vault_path = settings.app.vault_path if settings else "/tmp"
+        try:
+            usage = shutil.disk_usage(vault_path)
+            free_gb = round(usage.free / (1024**3), 2)
+            total_gb = round(usage.total / (1024**3), 2)
+            disk_status = f"`{free_gb} GB` free of `{total_gb} GB`"
+        except Exception:
+            pass
+
+        # 4. Rclone Check
+        rclone_status = "🔴 Not Installed"
+        if shutil.which("rclone"):
+            rclone_status = "🟢 Installed & Ready"
+
+        # 5. Active Session Summary
+        session_text = "No active session"
+        if session:
+            session_text = (
+                f"`{session['status']}` ({len(session['clips'])} clip(s), "
+                f"step {session.get('pipeline_progress', 0)})"
+            )
+            if session.get("error"):
+                session_text += f"\n⚠️ **Error:** `{session['error']}`"
+
+        report = (
+            f"📊 **System Status Report:**\n\n"
+            f"🤖 **Ollama:** {ollama_status}\n"
+            f"{cuda_status}\n"
+            f"💾 **Vault Disk Space:** {disk_status}\n"
+            f"☁️ **Rclone Status:** {rclone_status}\n\n"
+            f"🎬 **Active Session:** {session_text}"
+        )
+
+        await bot.reply_to(message, report, parse_mode="Markdown")
+
+    @bot.message_handler(commands=["retry"])
+    async def handle_retry(message: Message) -> None:
+        chat_id = message.chat.id
+        logger.info("Command /retry received", chat_id=chat_id)
         session = session_manager.get_session(chat_id)
 
         if not session:
-            await bot.reply_to(
-                message,
-                "ℹ️ No active session found. Start one with `/start_session` or just send a video/voice message.",
-                parse_mode="Markdown",
-            )
+            await bot.reply_to(message, "ℹ️ No active session to retry.")
             return
 
-        status = session["status"]
-        clip_count = len(session["clips"])
-        entry_date = session["entry_date"] or "Auto (min timestamp)"
-        created_at = session["created_at"][:19].replace("T", " ")
+        if not settings:
+            await bot.reply_to(message, "❌ System error: Settings missing.")
+            return
 
-        summary = (
-            f"📊 **Current Session Status:** `{status}`\n"
-            f"• **Entry Date:** {entry_date}\n"
-            f"• **Clips Collected:** {clip_count}\n"
-            f"• **Started At:** {created_at} UTC\n"
-            f"• **Pipeline Progress:** {session['pipeline_progress']} step(s)\n"
+        full_retry = "full" in (message.text or "").lower()
+        start_index = 0 if full_retry else session.get("pipeline_progress", 0)
+
+        session_manager.set_status(chat_id, "processing")
+        session_manager.update_payload(chat_id, error=None)
+
+        mode_str = "from scratch" if full_retry else f"from step {start_index}"
+        await bot.reply_to(
+            message,
+            f"🔄 **Retrying pipeline {mode_str}...**",
+            parse_mode="Markdown",
         )
-        if session.get("error"):
-            summary += f"\n⚠️ **Last Error:** `{session['error']}`"
 
-        await bot.reply_to(message, summary, parse_mode="Markdown")
+        ctx = PipelineContext(chat_id=chat_id, config=settings)
+        ctx.payload = dict(session)
+
+        async def custom_notify(msg: str) -> None:
+            await _notify_user(chat_id, f"⚙️ {msg}")
+
+        ctx.notify = custom_notify
+
+        try:
+            from vlog_journal.pipeline.runner import run_pipeline_from
+            res_ctx = await run_pipeline_from(DRAFT_PIPELINE_STEPS, ctx, start_index=start_index)
+
+            session_manager.update_payload(
+                chat_id,
+                draft_markdown=res_ctx.payload.get("draft_markdown"),
+                note_schema=res_ctx.payload.get("note_schema"),
+                media_stats=res_ctx.payload.get("media_stats"),
+                labeled_segments=res_ctx.payload.get("labeled_segments"),
+                locations_visited=res_ctx.payload.get("locations_visited"),
+                primary_location=res_ctx.payload.get("primary_location"),
+                primary_weather=res_ctx.payload.get("primary_weather"),
+                raw_video_path=res_ctx.payload.get("raw_video_path"),
+                raw_audio_path=res_ctx.payload.get("raw_audio_path"),
+                is_voice_memo=res_ctx.payload.get("is_voice_memo", False),
+                entry_date=res_ctx.payload.get("entry_date"),
+                pipeline_progress=len(DRAFT_PIPELINE_STEPS),
+                error=None,
+            )
+            session_manager.set_status(chat_id, "draft_pending")
+
+            updated_session = session_manager.get_session(chat_id)
+            if updated_session:
+                review_text, review_kb = build_review_message(updated_session)
+                await bot.send_message(
+                    chat_id,
+                    review_text,
+                    reply_markup=review_kb,
+                    parse_mode="Markdown",
+                )
+        except Exception as e:
+            logger.error("Retry pipeline execution failed", chat_id=chat_id, error=str(e))
+            session_manager.update_payload(chat_id, error=str(e))
+            await bot.send_message(
+                chat_id,
+                f"❌ **Pipeline Retry Failed!**\n• **Error:** `{e}`\n\n💡 *Use `/retry` to try again or `/retry full` to restart.*",
+                parse_mode="Markdown",
+            )
+
+    @bot.message_handler(commands=["sync_tags"])
+    async def handle_sync_tags(message: Message) -> None:
+        chat_id = message.chat.id
+        logger.info("Command /sync_tags received", chat_id=chat_id)
+
+        if not settings:
+            await bot.reply_to(message, "❌ System error: Settings missing.")
+            return
+
+        await bot.reply_to(message, "🏷️ **Scanning Obsidian vault to sync tags...**", parse_mode="Markdown")
+
+        try:
+            from vlog_journal.vault.tags import TagManager
+            tag_mgr = TagManager(settings.app.tags_cache_file)
+            tags = tag_mgr.sync_from_vault(settings.app.vault_path)
+            await bot.reply_to(
+                message,
+                f"✅ **Tag Cache Synchronized!**\n\n🏷️ **Total unique tags in cache:** `{len(tags)}`",
+                parse_mode="Markdown",
+            )
+        except Exception as e:
+            logger.error("Failed to sync tags from vault", chat_id=chat_id, error=str(e))
+            await bot.reply_to(message, f"❌ Failed to sync tags: `{e}`", parse_mode="Markdown")
+
+    @bot.message_handler(commands=["backup"])
+    async def handle_backup(message: Message) -> None:
+        chat_id = message.chat.id
+        logger.info("Command /backup received", chat_id=chat_id)
+
+        if not settings:
+            await bot.reply_to(message, "❌ System error: Settings missing.")
+            return
+
+        await bot.reply_to(message, "📦 **Starting encrypted vault backup...**", parse_mode="Markdown")
+
+        backup_steps = [
+            "vault.create_encrypted_archive",
+            "vault.upload_and_prune_remote",
+        ]
+
+        ctx = PipelineContext(chat_id=chat_id, config=settings)
+
+        async def custom_notify(msg: str) -> None:
+            try:
+                await bot.send_message(chat_id, f"⚙️ {msg}", parse_mode="Markdown")
+            except Exception:
+                pass
+
+        ctx.notify = custom_notify
+
+        try:
+            res_ctx = await run_pipeline(backup_steps, ctx)
+            archive_name = res_ctx.payload.get("archive_name", "archive.7z")
+            tag = res_ctx.payload.get("backup_tag", "daily")
+            await bot.send_message(
+                chat_id,
+                f"✅ **Backup Complete!**\n\n📦 **Archive:** `{archive_name}` ({tag})\n☁️ Uploaded to remote cloud storage and pruned old backups.",
+                parse_mode="Markdown",
+            )
+        except Exception as e:
+            logger.error("Manual backup failed", chat_id=chat_id, error=str(e))
+            await bot.send_message(
+                chat_id,
+                f"❌ **Backup Failed!**\nError: `{e}`",
+                parse_mode="Markdown",
+            )
+
 
     @bot.message_handler(commands=["finish_session"])
     async def handle_finish_session(message: Message) -> None:
@@ -489,52 +670,3 @@ def register_handlers(
             if updated_session:
                 await _reprocess_draft(chat_id, updated_session)
             return
-
-    @bot.message_handler(commands=["backup"])
-    async def handle_backup(message: Message) -> None:
-        chat_id = message.chat.id
-        logger.info("Command /backup received", chat_id=chat_id)
-
-        if not settings:
-            await bot.reply_to(message, "❌ System error: Settings missing.")
-            return
-
-        await bot.reply_to(message, "📦 **Starting encrypted vault backup...**", parse_mode="Markdown")
-
-        backup_steps = [
-            "vault.create_encrypted_archive",
-            "vault.upload_and_prune_remote",
-        ]
-
-        ctx = PipelineContext(chat_id=chat_id, config=settings)
-
-        async def custom_notify(msg: str) -> None:
-            try:
-                await bot.send_message(chat_id, f"⚙️ {msg}", parse_mode="Markdown")
-            except Exception:
-                pass
-
-        ctx.notify = custom_notify
-
-        try:
-            res_ctx = await run_pipeline(backup_steps, ctx)
-            archive_name = res_ctx.payload.get("archive_name", "archive.7z")
-            tag = res_ctx.payload.get("backup_tag", "daily")
-            await bot.send_message(
-                chat_id,
-                f"✅ **Backup Complete!**\n\n📦 **Archive:** `{archive_name}` ({tag})\n☁️ Uploaded to remote cloud storage and pruned old backups.",
-                parse_mode="Markdown",
-            )
-        except Exception as e:
-            logger.error("Manual backup failed", chat_id=chat_id, error=str(e))
-            await bot.send_message(
-                chat_id,
-                f"❌ **Backup Failed!**\nError: `{e}`",
-                parse_mode="Markdown",
-            )
-
-    @bot.message_handler(commands=["sync_tags", "retry"])
-    async def handle_stub_commands(message: Message) -> None:
-        cmd = message.text.split()[0] if message.text else "command"
-        logger.info("Stub command received", command=cmd, chat_id=message.chat.id)
-        await bot.reply_to(message, f"🚧 **Feature coming soon!** Command `{cmd}` active.", parse_mode="Markdown")
