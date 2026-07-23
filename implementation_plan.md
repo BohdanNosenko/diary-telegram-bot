@@ -26,9 +26,9 @@
   - [x] Step 12 — Encrypted Backup & Retention
 - [x] **Phase 6: Commands & Error Handling**
   - [x] Step 13 — Advanced Bot Commands & Error Notifications
-- [ ] **Phase 7: Testing & Documentation**
+- [x] **Phase 7: Testing & Documentation**
   - [x] Step 14 — Integration Testing & End-to-End Validation
-  - [ ] Step 15 — Documentation, README & Deployment Guide
+  - [x] Step 15 — Documentation, README & Deployment Guide
 
 ---
 
@@ -1190,15 +1190,15 @@ Write comprehensive documentation: README with features, setup guide, usage exam
 
 #### Completion Checklist
 
-- [ ] `README.md` contains: description, features, architecture diagram, quick start, config reference, commands
-- [ ] Quick start guide works on a fresh clone (5 steps from zero to running bot)
-- [ ] All bot commands are documented with examples
-- [ ] Obsidian note format is shown with a full example
-- [ ] `architecture_final.md` reflects actual implementation (no stale info)
-- [ ] Prerequisites are clearly listed (Nix, WSL2, NVIDIA driver, Docker)
-- [ ] First-time setup instructions cover: HF token, Telegram bot, Rclone config
-- [ ] Troubleshooting section covers common failure modes
-- [ ] `DEPLOYMENT.md` covers fresh machine setup (Nix, WSL2, CUDA, Docker, HF token, Rclone)
+- [x] `README.md` contains: description, features, architecture diagram, quick start, config reference, commands
+- [x] Quick start guide works on a fresh clone (5 steps from zero to running bot)
+- [x] All bot commands are documented with examples
+- [x] Obsidian note format is shown with a full example
+- [x] `architecture_final.md` reflects actual implementation (no stale info)
+- [x] Prerequisites are clearly listed (Nix, WSL2, NVIDIA driver, Docker)
+- [x] First-time setup instructions cover: HF token, Telegram bot, Rclone config
+- [x] Troubleshooting section covers common failure modes
+- [x] `DEPLOYMENT.md` covers fresh machine setup (Nix, WSL2, CUDA, Docker, HF token, Rclone)
 
 ---
 
