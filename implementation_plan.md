@@ -27,7 +27,7 @@
 - [x] **Phase 6: Commands & Error Handling**
   - [x] Step 13 — Advanced Bot Commands & Error Notifications
 - [ ] **Phase 7: Testing & Documentation**
-  - [ ] Step 14 — Integration Testing & End-to-End Validation
+  - [x] Step 14 — Integration Testing & End-to-End Validation
   - [ ] Step 15 — Documentation, README & Deployment Guide
 
 ---
@@ -1124,24 +1124,24 @@ Verify the complete pipeline works end-to-end: from a real video/voice upload th
 
 #### Completion Checklist
 
-- [ ] Single video clip → complete `.md` file with correct frontmatter in Obsidian vault
-- [ ] Multi-clip session → stitched video with correct date resolution
-- [ ] Voice-only session → concatenated MP3 with audio embed in note
-- [ ] Same-day collision → second entry gets `-02` suffix on both `.md` and media
-- [ ] Speaker labeling → re-generated note has correct speaker names
-- [ ] Crash recovery → bot restart recovers `draft_pending` sessions
-- [ ] LLM fallback → Gemini used when Ollama unavailable; `llm_fallback_used: true`
-- [ ] No GPS data → location fields are `null`, pipeline doesn't crash
-- [ ] No network → weather is `null`, pipeline doesn't crash
-- [ ] Saved `.md` opens correctly in Obsidian with valid frontmatter
-- [ ] Media file plays from Obsidian via wikilink
-- [ ] Tags from saved note appear in `data/tags.json`
-- [ ] `/backup` produces encrypted archive on Google Drive
-- [ ] `/status` reports correct system state
-- [ ] Pipeline completes within reasonable time (~3–5 min for a 5-min video)
-- [ ] VRAM peak stays within 8 GB at all phases
-- [ ] `ruff check src/` — zero errors across entire codebase
-- [ ] `uv run pytest` — all tests pass (unit + integration)
+- [x] Single video clip → complete `.md` file with correct frontmatter in Obsidian vault
+- [x] Multi-clip session → stitched video with correct date resolution
+- [x] Voice-only session → concatenated MP3 with audio embed in note
+- [x] Same-day collision → second entry gets `-02` suffix on both `.md` and media
+- [x] Speaker labeling → re-generated note has correct speaker names
+- [x] Crash recovery → bot restart recovers `draft_pending` sessions
+- [x] LLM fallback → Gemini used when Ollama unavailable; `llm_fallback_used: true`
+- [x] No GPS data → location fields are `null`, pipeline doesn't crash
+- [x] No network → weather is `null`, pipeline doesn't crash
+- [x] Saved `.md` opens correctly in Obsidian with valid frontmatter
+- [x] Media file plays from Obsidian via wikilink
+- [x] Tags from saved note appear in `data/tags.json`
+- [x] `/backup` produces encrypted archive on Google Drive
+- [x] `/status` reports correct system state
+- [x] Pipeline completes within reasonable time (~3–5 min for a 5-min video)
+- [x] VRAM peak stays within 8 GB at all phases
+- [x] `ruff check src/` — zero errors across entire codebase
+- [x] `uv run pytest` — all tests pass (unit + integration)
 
 ---
 

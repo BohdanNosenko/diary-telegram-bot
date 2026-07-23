@@ -26,6 +26,10 @@ async def render_markdown(ctx: PipelineContext) -> PipelineContext:
     is_voice_memo = ctx.payload.get("is_voice_memo", False)
     entry_date = ctx.payload.get("entry_date", datetime.now().strftime("%Y-%m-%d"))
 
+    media_stats = dict(ctx.payload.get("media_stats") or {})
+    if "languages_detected" not in media_stats:
+        media_stats["languages_detected"] = {"en": 100}
+
     # Time and Day of week
     dt = datetime.strptime(entry_date, "%Y-%m-%d")
     day_of_week = dt.strftime("%A")
